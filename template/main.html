@@ -288,6 +288,41 @@
     main.deck>div.slide[display="true"] {
       display: block;
     }
+
+    section#slide-toolbar {
+      position: absolute;
+      bottom: 0;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      margin-bottom: 21px;
+
+      border-radius: 21px;
+
+      background-color: white;
+      box-shadow: 0px 0px 13px rgba(0, 0, 0, 0.08);
+    }
+
+    section#slide-toolbar>button.toolbar-button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      width: 34px;
+      height: 34px;
+
+      margin: 8px;
+
+      border-radius: 13px;
+      background-color: beige;
+    }
+
+    section#slide-toolbar>button.toolbar-button svg {
+      width: 21px;
+      height: 21px;
+    }
   </style>
   <!-- End of Base CSS -->
 </head>
@@ -315,6 +350,24 @@
     </div>
   </main>
 
+  <section id="slide-toolbar">
+    <button id="button-previous" class="toolbar-button" type="button" value="previous" title="Previous">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path fill-rule="evenodd"
+          d="M7.72 12.53a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 1 1 1.06 1.06L9.31 12l6.97 6.97a.75.75 0 1 1-1.06 1.06l-7.5-7.5Z"
+          clip-rule="evenodd" />
+      </svg>
+    </button>
+
+    <button id="button-next" class="toolbar-button" type="button" value="next" title="Next">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path fill-rule="evenodd"
+          d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z"
+          clip-rule="evenodd" />
+      </svg>
+    </button>
+  </section>
+
   <!-- Resizing Script -->
   <script>
     const applyResize = () => {
@@ -339,40 +392,97 @@
 
     let slide = 1;
 
+    function previousSlide() {
+      document.getElementById(`slide-end`).setAttribute("display", false);
+
+      if (slide == 1) {
+        return;
+      }
+
+      document.getElementById(`slide-${slide - 1}`).setAttribute("display", true);
+      if (slide == totalSlide) {
+        document.getElementById(`slide-end`).setAttribute("display", false);
+      } else {
+        document.getElementById(`slide-${slide}`).setAttribute("display", false);
+      }
+
+      slide = slide - 1;
+    }
+
+    function nextSlide() {
+      if (slide == totalSlide) {
+        return;
+      }
+
+      if (slide + 1 == totalSlide) {
+        document.getElementById(`slide-end`).setAttribute("display", true);
+      } else {
+        document.getElementById(`slide-${slide + 1}`).setAttribute("display", true);
+      }
+      document.getElementById(`slide-${slide}`).setAttribute("display", false);
+
+      slide = slide + 1;
+    }
+
+
+
     document.getElementById(`slide-${slide}`).setAttribute("display", true);
 
     document.addEventListener("keydown", (e) => {
       e = e || window.event;
 
       if (e.keyCode == "37") {// Left Arrow
-        document.getElementById(`slide-end`).setAttribute("display", false);
-
-        if (slide == 1) {
-          return;
-        }
-
-        document.getElementById(`slide-${slide - 1}`).setAttribute("display", true);
-        if (slide == totalSlide) {
-          document.getElementById(`slide-end`).setAttribute("display", false);
-        } else {
-          document.getElementById(`slide-${slide}`).setAttribute("display", false);
-        }
-
-        slide = slide - 1;
+        previousSlide();
       } else if (e.keyCode == "39") {// Right Arrow
-        if (slide == totalSlide) {
-          return;
-        }
-
-        if (slide + 1 == totalSlide) {
-          document.getElementById(`slide-end`).setAttribute("display", true);
-        } else {
-          document.getElementById(`slide-${slide + 1}`).setAttribute("display", true);
-        }
-        document.getElementById(`slide-${slide}`).setAttribute("display", false);
-
-        slide = slide + 1;
+        nextSlide();
       }
+    });
+
+    document.getElementById("button-previous").addEventListener("click", (e) => {
+      previousSlide();
+    });
+
+    document.getElementById("button-next").addEventListener("click", (e) => {
+      nextSlide();
+    });
+
+
+
+    let touchXStart = null;
+    let touchYStart = null;
+
+    document.addEventListener("touchstart", (e) => {
+      touchXStart = e.touches[0].clientX;
+      touchYStart = e.touches[0].clientY;
+    });
+
+    document.addEventListener("touchmove", (e) => {
+      if (!touchXStart || !touchYStart) {
+        return;
+      }
+
+      let touchXEnd = e.touches[0].clientX;
+      let touchYEnd = e.touches[0].clientY;
+
+      let touchXDiff = touchXStart - touchXEnd;
+      let touchYDiff = touchYStart - touchYEnd;
+
+      if (Math.abs(touchXDiff) > Math.abs(touchYDiff)) {/*most significant*/
+        if (touchXDiff > 0) {// Right Swipe
+          nextSlide();
+        } else {// Left Swipe
+          previousSlide();
+        }
+      } else {
+        if (touchYDiff > 0) {// Down Swipe
+
+        } else {// Up Swipe
+
+        }
+      }
+
+      touchXStart = null;
+      touchYStart = null;
     });
   </script>
 </body>
