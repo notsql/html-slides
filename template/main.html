@@ -250,11 +250,6 @@
 
   <!-- Base CSS -->
   <style>
-    :root {
-      /* --slide-width: 100vw; */
-      /* --slide-height: calc((var(--slide-width) / 3) * 2); */
-    }
-
     section#slide-toolbar,
     div.slide-end {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -278,6 +273,7 @@
       width: 100%;
 
       background-color: transparent;
+      overflow: hidden;
     }
 
     main.deck>div.slide {
@@ -286,12 +282,15 @@
 
       width: 100%;
       height: 100%;
-
       background-color: white;
     }
 
     main.deck>div.slide[display="true"] {
       display: block;
+    }
+
+    main.deck>div.slide * {
+      position: absolute;
     }
 
     section#slide-toolbar {
@@ -328,6 +327,11 @@
       width: 21px;
       height: 21px;
     }
+
+    section#slide-toolbar>span#toolbar-slide-count {
+      width: 34px;
+      text-align: center;
+    }
   </style>
   <!-- End of Base CSS -->
 </head>
@@ -335,7 +339,8 @@
 <body>
   <main id="slide-deck" class="deck">
     <div id="slide-1" class="slide">
-      <h1>Slide 1</h1>
+      <!-- <h1 style="position: absolute; top: 1cqh; left: 50cqi; font-size: 1svi;">Slide 1</h1> -->
+      <h1 style="top: 10%; left: 50%; font-size: 1em;">Slide 1</h1>
     </div>
 
     <div id="slide-2" class="slide">
@@ -375,6 +380,7 @@
     </button>
   </section>
 
+  <!-- Dynamic Font Engine -->
   <!-- Resizing Script -->
   <script>
     const applyResize = () => {
