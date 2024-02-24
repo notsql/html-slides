@@ -248,6 +248,14 @@
   </style>
   <!-- End of Reset CSS -->
 
+  <!-- Configuration CSS -->
+  <style>
+    :root {
+      --slide-ratio-horizontal: 3;
+      --slide-ratio-vertical: 2;
+    }
+  </style>
+
   <!-- Base CSS -->
   <style>
     section#slide-toolbar,
@@ -269,7 +277,7 @@
     main.deck {
       position: relative;
 
-      aspect-ratio: 3/2;
+      aspect-ratio: var(--slide-ratio-horizontal)/var(--slide-ratio-vertical);
       width: 100%;
 
       background-color: transparent;
@@ -339,7 +347,9 @@
 <body>
   <main id="slide-deck" class="deck">
     <div id="slide-1" class="slide">
-      <h1 style="top: 10%; left: 50%; font-size: min(100vh, calc((100vw /3) * 2));">Slide 1</h1>
+      <h1
+        style="--font-size: 1; top: 10%; left: 50%; font-size: min(calc(var(--font-size) * 1vh), calc(((var(--font-size) * 1vw) /var(--slide-ratio-horizontal)) * var(--slide-ratio-vertical)));">
+        Slide 1</h1>
     </div>
 
     <div id="slide-2" class="slide">
